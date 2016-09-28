@@ -10,7 +10,7 @@ KERNEL_OFFSET equ 0x1000
 	mov bx, MSG_BOOTSTRAP_INIT
 	call print16
 
-	; call loadKernel
+	call loadKernel
   ;
 	; call switchProtected32
 
@@ -24,19 +24,19 @@ print16:
 	add bx, 1
 	cmp al, 0
 	jne print16
-	mov al, 10
+	mov al, 13 ; new line
 	int 0x10
 	ret
 
-; loadKernel:
-; 	mov bx, MSG_KERNEL_INIT
-; 	call print16
-;
-; 	mov bx, KERNEL_OFFSET
-; 	mov dh, 15 ;15 sectors
-; 	mov dl, [BOOT_DRIVE]
-; 	call loadFromDisk
-; 	ret
+loadKernel:
+	mov bx, MSG_KERNEL_INIT
+	call print16
+
+	; mov bx, KERNEL_OFFSET
+	; mov dh, 15 ;15 sectors
+	; mov dl, [BOOT_DRIVE]
+	; call loadFromDisk
+	ret
 ;
 ; [bits 32]
 ; switchProtected32:
