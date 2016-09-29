@@ -1,13 +1,19 @@
-all: boot/boot.bin
+all: clean kernel.elf
+
+CC=gcc
+CC_FLAGS=-m32 -nostdlib -nostdinc -fno-builtin -fno-stack-protector -nostartfiles -nodefaultlibs -Wall -Wextra -Werror -c
 
 %.o: %.c
-	gcc -std=c86 -ffreestanding -c $< -o $@
+	$(CC) $(CC_FLAGS) -Iinclude $< -o $@
 
-%.bin: %.asm
-	nasm $< -f bin -o $@
+%.o: %.asm
+	nasm $< -f elf32 -o $@
+
+kernel.elf: boot/boot.o kernel/io.o drivers/framebuffer.o kernel/kernel.o
+	ld -T boot/link.ld -melf_i386 $^ -o $@
 
 clean:
-	rm **/*.o **/*.bin
+	rm **/*.o *.elf
 
-run:
-	qemu-system-i386 boot/boot.bin
+run: kernel.elf
+	qemu-system-i386 -kernel kernel.elf

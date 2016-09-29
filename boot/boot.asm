@@ -1,55 +1,25 @@
-[org 0x7c00]
-KERNEL_OFFSET equ 0x1000
+global loader
+[bits 32]
 
-	mov [BOOT_DRIVE], dl
+extern kmain
 
-	; setup stack
-	mov bp, 0x9000
-	mov sp, bp
+MAGIC_NUMBER equ 0x1BADB002
+FLAGS equ 0x0
+CHECKSUM equ -MAGIC_NUMBER
+KERNEL_STACK_SIZE equ 4096
 
-	mov bx, MSG_BOOTSTRAP_INIT
-	call print16
+section .bss
+align  4
+	resb KERNEL_STACK_SIZE
 
-	call loadKernel
-  ;
-	; call switchProtected32
+section .text:
+align 4
+	dd MAGIC_NUMBER
+	dd FLAGS
+	dd CHECKSUM
 
-	jmp $
-
-[bits 16]
-print16:
-	mov ah, 0x0e
-	mov al, [bx]
-	int 0x10
-	add bx, 1
-	cmp al, 0
-	jne print16
-	mov al, 13 ; new line
-	int 0x10
-	ret
-
-loadKernel:
-	mov bx, MSG_KERNEL_INIT
-	call print16
-
-	; mov bx, KERNEL_OFFSET
-	; mov dh, 15 ;15 sectors
-	; mov dl, [BOOT_DRIVE]
-	; call loadFromDisk
-	ret
-;
-; [bits 32]
-; switchProtected32:
-; 	mov ebx, MSG_KERNEL_LOAD
-; 	call print32
-; 	call KERNEL_OFFSET
-
-
-BOOT_DRIVE db 0
-MSG_BOOTSTRAP_INIT: db "Starting 16bit bootstrap", 0
-MSG_KERNEL_INIT: db "Starting kernel loading", 0
-MSG_KERNEL_LOAD: db "Launching kernel", 0
-
-; Set as bootable
-times 510-($-$$) db 0
-dw 0xaa55
+loader:
+	mov esp, 0x9000 - KERNEL_STACK_SIZE
+	call kmain
+.loop:
+		jmp .loop
