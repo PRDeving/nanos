@@ -1,0 +1,6 @@
+{
+  "name": "nanOS",
+  "tagline": "nan Operating System in assembly and C86",
+  "body": "# nanOS\r\nnanOS is a light Operating System written in NASM assembly and C\r\n\r\nEvery single routine in the nanOS kernel has been written from scratch, from the asm entry point to the kernel drivers, learning is \r\nthe main reason to not using external libraries or resources\r\n\r\n## What can it do\r\nRight now, nanOS kernel is bootable using GRUB (or qemu) and launches the C kernel entry point (kmain), after that, it'll take control of\r\nthe machine.\r\n\r\nio.asm library has been written to interact with hardware level I/O signals\r\n\r\nFramebuffer is avaiable to interact with the screen, over this, a simple console I/O controler has been written, implementing the\r\nwell known stdio print function and a custom prints function to print text with styles\r\n\r\n\r\n## Compilation and testing\r\n\r\nto compile, you will need make, nasm and gcc.\r\n`$ make`\r\n\r\nto run the test you will need qemu\r\n`$ make run`\r\nor load the kernel from grub\r\n\r\n## next steps\r\n- file system\r\n- memory management\r\n- memory pagination\r\n- console input\r\n- basic shell (bash-style)\r\n",
+  "note": "Don't delete this file! It's used internally to help with page regeneration."
+}
