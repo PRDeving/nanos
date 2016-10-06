@@ -4,6 +4,7 @@
 #include <asm/io.h>
 #define FB_DEFAULT 0x0f
 #define FB_GREEN_IN_BLACK 0x02
+#define FB_RED_IN_BLACK 0x04
 
 void move_cursor_to(int, int);
 void cursor_next(void);
